@@ -2,7 +2,7 @@ import pandas as pd
 
 dataset = pd.read_csv('googleplaystore_user_reviews.csv')
 dataset.head(10)
-
+dataset = dataset[:5000]
 #dataset['App'].value_counts()
 
 dataset['Sentiment'].value_counts()
@@ -12,6 +12,7 @@ label = dataset['Sentiment']
 positive_df = dataset[(dataset['Sentiment'] == 'Positive')]
 negative_df = dataset[(dataset['Sentiment']=='Negative')]
 neutral_df = dataset[(dataset['Sentiment']=='Neutral')]
+
 
 
 
@@ -49,21 +50,24 @@ neutral_list = get_top_n_words(neutral_df["Translated_Review"][:],20)
 neu_words = []
 for neuwords in neutral_list:
     neu_words.append(neuwords[1])
-test_pos = ['awesome', 'worth', 'thanks', 'amazing', 'simple', 'perfect', 'price', 'everything', 'ever', 'must', 'ipod', 'before', 'found', 'store', 'never', 'recommend', 'done', 'take', 'always', 'touch']
-test_neg = ['waste', 'money', 'crashes', 'tried', 'useless', 'nothing', 'paid', 'open', 'deleted', 'downloaded', 'didn’t', 'says', 'stupid', 'anything', 'actually', 'account', 'bought', 'apple', 'already']
-test_neu = ['ok']
+#test_pos = ['awesome', 'worth', 'thanks', 'amazing', 'simple', 'perfect', 'price', 'everything', 'ever', 'must', 'ipod', 'before', 'found', 'store', 'never', 'recommend', 'done', 'take', 'always', 'touch']
+#test_neg = ['waste', 'money', 'crashes', 'tried', 'useless', 'nothing', 'paid', 'open', 'deleted', 'downloaded', 'didn’t', 'says', 'stupid', 'anything', 'actually', 'account', 'bought', 'apple', 'already']
+#test_neu = ['ok']
 df = dataset[:]
 for i in df.index.tolist():
     for word in df.at[i, "Translated_Review"].lower().split():
-        if word in test_pos:
+        if word in pos_words:
             df.at[i, word] = 1
-        elif word in test_neg:
+        elif word in neg_words:
             df.at[i, word] = -1
-        elif word in test_neu:
+        elif word in neu_words:
             df.at[i, word] = 0
 
-df = df.drop(["App", "Translated_Review", "Sentiment_Polarity", "Sentiment_Subjectivity"], axis =1)
-df.tail()
+df = df.d
+    
+    #Train Accuracy
+    train_acc = accuracy_score(y_train, pred_train, normalizerop(["App", "Translated_Review", "Sentiment_Polarity", "Sentiment_Subjectivity"], axis =1)
+#df.tail()
 
 x = df.drop(["Sentiment"], axis =1)
 x = x.fillna(0)
@@ -74,15 +78,12 @@ x_train,x_test,y_train,y_test = train_test_split(x,y,test_size = 0.25, random_st
 from sklearn.metrics import accuracy_score,confusion_matrix
 def train_test_accuracy(Classifier,X_train,y_train,X_test,y_test):
     
-    #Train Model Fitting
+   #Train Model Fitting
     Classifier.fit(X_train,y_train)
-    pred_train = Classifier.predict(X_train)
-    print(pred_train)
-    
-    #Train Accuracy
-    train_acc = accuracy_score(y_train, pred_train, normalize=True) * float(100)
-    
-    #Test Accuracy
+    '''pred_train = Classifier.predict(X_train)
+    print(pred_train)=True) * float(100)
+    '''
+        
     pred_test = Classifier.predict(X_test)
     test_acc = accuracy_score(y_test, pred_test, normalize=True) * float(100)
     
