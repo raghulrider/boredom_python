@@ -9,7 +9,7 @@ with urllib.request.urlopen("https://en.wikipedia.org/wiki/Database") as url:
 soup = BeautifulSoup(html)
 for script in soup(["script", "style"]):
     script.extract()
-text = soup.get_text()
+text = soup.get_text().lower()
 lines = (line.strip() for line in text.splitlines())
 chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
 text = '\n'.join(chunk for chunk in chunks if chunk)
@@ -22,6 +22,7 @@ words_df = pd.DataFrame(words, columns = ['Words'])
 def fix_value(word_str):
     word_str = word_str.replace(',','')
     word_str = word_str.replace('.','')
+    word_str = word_str.replace('databases','database')
     return(word_str)
 
 #calling fix function    
@@ -39,10 +40,10 @@ for i in words_df["Words"]:
 word_count_swapped = dict([(value, key) for key, value in word_count.items()]) 
 frequent_words =[]
 for key,value in word_count_swapped.items():
-    if key>96:
+    if key>97:
         frequent_words.append([value,key])
         frequent_words.sort()
-
+print(frequent_words)
 #creating dataframe for most frequently used words
 frequent_words_df = pd.DataFrame(frequent_words, columns = ['Word', 'Count'])
 
